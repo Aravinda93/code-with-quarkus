@@ -1,0 +1,12 @@
+quarkus:
+  swagger-ui:
+    always-include: true
+  http:
+    cors: true
+    port: 8085
+
+  container-image:
+    group: test
+    name: test-service
+    additional-tags:
+      - latest
