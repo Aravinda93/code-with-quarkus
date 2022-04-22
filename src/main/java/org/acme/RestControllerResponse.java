@@ -21,8 +21,8 @@ public class RestControllerResponse {
     @RequestBody(
             content = @Content(
                     examples = {
-                            @ExampleObject(name = "Example1", ref = "Example1"),
-                            @ExampleObject(name = "Example2", ref = "Example1")
+                            @ExampleObject(name = "Example1", ref = "Example1.json"),
+                            @ExampleObject(name = "Example2", ref = "Example2.json")
                     }))
     public String generator(final Map<String, Object> input) throws Exception {
         return "Hello From Generator Method";
