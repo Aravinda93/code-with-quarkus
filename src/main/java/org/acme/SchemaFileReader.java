@@ -53,11 +53,9 @@ public class SchemaFileReader implements OASFilter {
     private void getRemoteFiles(final Map<String, Example> examples) throws Exception {
 
         //Read the GitHub files
-        final String inputURL = "";
+        final String inputURL = "https://api.github.com/repos/Aravinda93/code-with-quarkus/contents/src/main/resources/jsonFiles";
         final CloseableHttpResponse folderResponse = httpClient.execute(new HttpGet(inputURL));
         final String responseBody = EntityUtils.toString(folderResponse.getEntity(), StandardCharsets.UTF_8);
-        //System.out.println(" Status Code : " + folderResponse.getStatusLine().getStatusCode() + " Folder Request Content type : " + ContentType.get(folderResponse.getEntity()));
-        System.out.println(new JSONArray(responseBody));
 
         //If the API request provides valid response with content type JSON then get the links to files in that folder
         if (folderResponse.getStatusLine().getStatusCode() == 200 && ContentType.get(folderResponse.getEntity()).toString().equalsIgnoreCase("application/json; charset=utf-8")) {
@@ -69,14 +67,14 @@ public class SchemaFileReader implements OASFilter {
                 jsonArray.forEach(item -> {
                     final JSONObject obj = (JSONObject) item;
 
-                    if (obj.getString("download_url").contains(".jsonld")) {
+                    if (obj.getString("download_url").contains(".json")) {
                         //Make request to each file in the GitHub folder and obtain its contents
                         try {
                             final CloseableHttpResponse fileResponse = httpClient.execute(new HttpGet(obj.getString("download_url")));
-                            //System.out.println("File Name : " + obj.getString("download_url") + " -- Folder Request Content type : " + ContentType.get(fileResponse.getEntity()));
                             //If the response code is 200 then add the contents to Example
                             if (fileResponse.getStatusLine().getStatusCode() == 200) {
                                 final String fileResponseBody = EntityUtils.toString(fileResponse.getEntity(), StandardCharsets.UTF_8);
+                                System.out.println(obj.getString("name"));
                                 examples.put(obj.getString("name"), OASFactory.createExample().value(objectMapper.readValue(fileResponseBody, ObjectNode.class)));
                             }
                         } catch (IOException e) {
